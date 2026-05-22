@@ -1,0 +1,9 @@
+store,review_id,rating,title,review_text,review_date
+apple_app_store,sample-as-003,5,Finally all accounts in one place,Portfolio sync across banks is reliable now. Onboarding tutorial was helpful.,2026-05-14 07:18:52.527025+00:00
+google_play,sample-gp-001,5,Great net worth tracking,Easy onboarding and my portfolios synced within minutes. Love the weekly snapshot.,2026-05-10 07:18:52.527004+00:00
+apple_app_store,sample-as-004,4,Solid app,UI refresh looks modern. Still waiting for custom notification schedules.,2026-05-07 07:18:52.527028+00:00
+apple_app_store,sample-as-001,4,Clean UI,Dashboard is intuitive but notifications are too frequent for price alerts.,2026-05-04 07:18:52.527021+00:00
+google_play,sample-gp-002,2,Crashes after update,App freezes when I open transactions. Performance was fine last month.,2026-04-27 07:18:52.527019+00:00
+google_play,sample-gp-004,2,Slow loads,Charts take forever on older Android. Crashes when switching to transactions tab.,2026-04-19 07:18:52.527026+00:00
+apple_app_store,sample-as-002,1,Sync issues,Broker connection keeps failing. Support helped but issue returned after a week.,2026-04-12 07:18:52.527022+00:00
+google_play,sample-gp-003,3,Decent,Works for basic monitoring. Would like better export for tax reporting.,2026-03-28 07:18:52.527024+00:00

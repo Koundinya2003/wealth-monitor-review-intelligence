@@ -1,0 +1,21 @@
+You are preparing an executive product pulse for "{app_name}".
+
+From the themed review analysis below, select exactly 3 short, human-readable user quotes that best represent customer voice.
+
+Rules:
+- Maximum 3 quotes
+- Each quote max 25 words
+- Paraphrase lightly for clarity; do not include usernames, emails, or IDs
+- No PII
+- Quotes must be grounded in actual review text provided
+- Mix sentiments if possible (not all negative)
+
+Return valid JSON only:
+{{
+  "quotes": [
+    {{"text": "quote here", "sentiment": "positive|neutral|negative", "theme": "Theme Name"}}
+  ]
+}}
+
+Themed reviews sample:
+{reviews_sample}
