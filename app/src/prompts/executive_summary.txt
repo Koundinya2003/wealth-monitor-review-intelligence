@@ -1,0 +1,26 @@
+Write an executive-friendly weekly review pulse for "{app_name}".
+
+Use the statistics and theme analysis provided. The final narrative must be under {max_words} words total when rendered as markdown sections (Review Summary, Top Themes, Real User Quotes, Recommended Actions).
+
+Tone: concise, scannable, leadership-ready. No PII.
+
+Input data:
+{analysis_json}
+
+Return valid JSON only:
+{{
+  "review_summary": {{
+    "total_reviews": 0,
+    "average_rating": 0.0,
+    "positive_pct": 0,
+    "negative_pct": 0,
+    "neutral_pct": 0
+  }},
+  "top_themes": [
+    {{"name": "", "pct": 0, "explanation": ""}}
+  ],
+  "quotes": [{{"text": ""}}],
+  "actions": ["", "", ""]
+}}
+
+Top themes: max 3. Actions: exactly 3 concise product recommendations.

@@ -1,0 +1,17 @@
+Write a professional email draft for the product team sharing the weekly app review pulse for "{app_name}".
+
+Tone: concise, professional, product-team friendly.
+Length: under 200 words in the email body.
+Include: top themes, 3 short quotes, 3 action recommendations.
+Do NOT include placeholders like [Name] — use "Hi team," as greeting.
+Do not mention sending or scheduling; this is a draft only.
+No PII.
+
+Source pulse data:
+{pulse_json}
+
+Return valid JSON only:
+{{
+  "subject": "Weekly Wealth Monitor Review Pulse — [date]",
+  "body": "full email body in markdown"
+}}
