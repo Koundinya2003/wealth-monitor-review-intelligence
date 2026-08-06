@@ -1,0 +1,289 @@
+# Wealth Coach AI
+
+> **Turn every paycheck into a personalized wealth plan.**
+
+Wealth Coach AI is an AI-powered financial coach that helps young professionals make smarter investment decisions based on their income, expenses, financial goals, and risk tolerance.
+
+Instead of simply tracking money, the application recommends **where to invest**, **why those investments fit the user's profile**, and **how consistent investing can build long-term wealth**.
+
+---
+
+# Problem
+
+Most first-time earners don't know what to do after receiving their salary.
+
+Questions like:
+
+- How much can I safely invest every month?
+- Should I start with stocks or mutual funds?
+- Should I build an emergency fund first?
+- Which investments actually match my goals?
+- How do I grow my money without taking unnecessary risks?
+
+are difficult to answer without financial knowledge.
+
+Wealth Coach AI simplifies these decisions using AI-driven financial planning.
+
+---
+
+# Features
+
+### Personalized Financial Profile
+
+Create a financial profile by entering:
+
+- Monthly Salary
+- Monthly Expenses
+- Financial Goal
+- Risk Appetite
+
+The application builds a personalized investment strategy based on these inputs.
+
+---
+
+### AI Investment Planner
+
+Generate a monthly financial plan tailored to your profile.
+
+The planner calculates:
+
+- Money Available to Invest
+- Monthly Savings Rate
+- Emergency Fund Target
+- Suggested Investment Amount
+- Investment Readiness Score
+
+---
+
+### Investment Opportunity Engine
+
+Instead of generic advice, Wealth Coach AI discovers investment opportunities across multiple categories, including:
+
+- Stocks
+- Mutual Funds
+- Index Funds
+- ETFs
+- Gold ETFs
+- Government Bonds
+- Fixed Deposits
+- PPF
+- NPS
+- REITs
+- Skill Development Opportunities
+
+Every opportunity is ranked based on your financial profile.
+
+---
+
+### AI Coach
+
+The AI explains:
+
+- Why each investment matches your profile
+- Potential risks
+- Expected long-term benefits
+- Recommended allocation
+- Practical next steps
+
+Every recommendation includes a clear explanation instead of generic financial advice.
+
+---
+
+### Interactive Dashboard
+
+Everything is available on a single dashboard.
+
+The dashboard displays:
+
+- Monthly Salary
+- Monthly Expenses
+- Available Income
+- Savings Rate
+- Investment Readiness Score
+- AI Financial Summary
+- Recommended Investment Opportunities
+- Investment Allocation Chart
+- Projected Wealth Growth
+- Daily Financial Learning Card
+
+---
+
+# Architecture
+
+```text
+wealth-coach-ai/
+
+app.py
+database.py
+theme.py
+
+services/
+    planner.py
+    discovery.py
+    ai.py
+
+components/
+    cards.py
+    charts.py
+
+pages/
+    onboarding.py
+    dashboard.py
+
+assets/
+
+.env.example
+requirements.txt
+README.md
+```
+
+---
+
+# AI Pipeline
+
+```text
+User Profile
+      │
+      ▼
+Financial Planner
+      │
+      ▼
+Investment Discovery Engine
+      │
+      ▼
+AI Opportunity Ranking
+      │
+      ▼
+Personalized Dashboard
+```
+
+### Financial Planner
+
+Calculates:
+
+- Available Income
+- Savings Rate
+- Emergency Fund Goal
+- Suggested Monthly Investment
+- Investment Readiness Score
+
+### Investment Discovery Engine
+
+Discovers investment opportunities from trusted public financial sources.
+
+Normalizes information such as:
+
+- Investment Name
+- Category
+- Risk Level
+- Expected Return
+- Liquidity
+- Current Price (where available)
+- Source
+
+### AI Coach
+
+Ranks opportunities using:
+
+- Monthly Income
+- Financial Goals
+- Risk Appetite
+- Investment Horizon
+- Diversification Strategy
+
+Then generates personalized recommendations with clear explanations.
+
+---
+
+# Technology Stack
+
+### Frontend
+
+- Streamlit
+
+### Backend
+
+- Python
+
+### Database
+
+- SQLite
+- SQLAlchemy
+
+### Charts
+
+- Plotly
+
+### AI
+
+- OpenRouter API
+
+### Data Collection
+
+- Requests
+- Public Financial APIs
+
+---
+
+# Running the Project
+
+### 1. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Create your environment file
+
+```bash
+cp .env.example .env
+```
+
+### 3. Add your OpenRouter API key
+
+```env
+OPENROUTER_API_KEY=your_api_key_here
+OPENROUTER_MODEL=openai/gpt-4.1-mini
+DATABASE_URL=wealth_coach.db
+```
+
+### 4. Start the application
+
+```bash
+streamlit run app.py
+```
+
+---
+
+# Roadmap
+
+- Live market data integration
+- Real-time investment discovery
+- Monthly AI portfolio reviews
+- Tax-aware investment recommendations
+- SIP recommendations
+- Goal tracking and milestones
+- Market news integration
+- Mobile-responsive interface
+- Exportable investment plans
+- Progress tracking and reminders
+
+---
+
+# Design Philosophy
+
+Wealth Coach AI is intentionally simple.
+
+Instead of overwhelming users with dozens of charts and financial metrics, the application focuses on answering one question:
+
+> **"Given my income, where should I invest my money this month?"**
+
+Every screen, recommendation, and visualization is designed to help users make confident financial decisions with minimal effort.
+
+---
+
+# Disclaimer
+
+This project is intended for educational and portfolio purposes only.
+
+The investment recommendations generated by the application should not be considered professional financial advice. Always conduct your own research or consult a qualified financial advisor before making investment decisions.
