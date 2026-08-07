@@ -165,6 +165,9 @@ class RedditCollector:
                 
                 # Check for other errors
                 if response.status_code != 200:
+                    if response.status_code == 403:
+                        logger.warning(f"Reddit unavailable: 403 Forbidden (rate limited or blocked)")
+                        return None
                     logger.error(
                         f"Reddit API request failed with status {response.status_code}: "
                         f"{response.text[:200]}"
@@ -181,7 +184,7 @@ class RedditCollector:
                 return None
                 
             except requests.exceptions.RequestException as e:
-                logger.error(f"Request error (attempt {attempt + 1} {e}")
+                logger.error(f"Request error (attempt {attempt + 1}): {e}")
                 if attempt < self.max_retries - 1:
                     time.sleep(self.retry_delay)
                     continue

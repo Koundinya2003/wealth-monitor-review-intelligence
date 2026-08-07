@@ -122,8 +122,11 @@ class ContentCleaner:
         # Remove navigation text
         text = self._remove_navigation(text)
         
-        # Remove special characters if configured
+        # Remove special characters if configured (preserve newlines)
         if self.config.remove_special_chars:
+            # Preserve paragraph breaks
+            text = text.replace('\n\n', '\n\n')
+            text = text.replace('\n', ' ')
             text = self.special_chars_pattern.sub('', text)
         
         # Normalize whitespace

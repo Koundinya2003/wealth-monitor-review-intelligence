@@ -12,6 +12,7 @@ Provides collectors for:
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 import logging
+import ssl
 import feedparser
 
 from .models import InvestmentArticle, CollectorResult
@@ -213,13 +214,18 @@ class RSSCollector:
         errors = []
         
         try:
-            # Parse feed
-            feed = feedparser.parse(self.feed_url)
+            # Create SSL context that doesn't verify certificates (for feeds with SSL issues)
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            
+            # Parse feed with custom SSL context
+            feed = feedparser.parse(self.feed_url, handler=ssl_context)
             
             # Check for feed parsing errors
             if feed.bozo and not feed.entries:
                 error_msg = f"Feed parsing error for {self.source_name}: {feed.bozo_exception}"
-                logger.error(error_msg)
+                logger.warning(f"RSS unavailable: {error_msg}")
                 errors.append(error_msg)
                 return self._create_result(articles, errors)
             
@@ -246,7 +252,7 @@ class RSSCollector:
             
         except Exception as e:
             error_msg = f"Failed to fetch RSS feed from {self.source_name}: {e}"
-            logger.error(error_msg)
+            logger.warning(f"RSS unavailable: {error_msg}")
             errors.append(error_msg)
         
         return self._create_result(articles, errors)

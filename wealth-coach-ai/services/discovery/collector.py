@@ -230,9 +230,9 @@ def collect_all_articles() -> List[InvestmentArticle]:
     
     all_articles = []
     collection_stats = {
-        'rss': {'success': False, 'count': 0, 'error': None},
-        'newsapi': {'success': False, 'count': 0, 'error': None},
-        'reddit': {'success': False, 'count': 0, 'error': None}
+        'rss': {'success': False, 'count': 0, 'error': None, 'logged': False},
+        'newsapi': {'success': False, 'count': 0, 'error': None, 'logged': False},
+        'reddit': {'success': False, 'count': 0, 'error': None, 'logged': False}
     }
     
     # Import collectors here to avoid circular imports
@@ -248,10 +248,16 @@ def collect_all_articles() -> List[InvestmentArticle]:
             all_articles.extend(result.articles)
             collection_stats['rss']['success'] = True
             collection_stats['rss']['count'] += len(result.articles)
-        logger.info(f"RSS collection complete: {collection_stats['rss']['count']} articles")
+        if collection_stats['rss']['count'] > 0:
+            logger.info(f"RSS collection complete: {collection_stats['rss']['count']} articles")
+        elif not collection_stats['rss']['logged']:
+            logger.warning("RSS unavailable")
+            collection_stats['rss']['logged'] = True
     except Exception as e:
         error_msg = f"RSS collection failed: {str(e)}"
-        logger.error(error_msg)
+        if not collection_stats['rss']['logged']:
+            logger.warning(f"RSS unavailable")
+            collection_stats['rss']['logged'] = True
         collection_stats['rss']['error'] = error_msg
     
     # Collect from NewsAPI
@@ -262,10 +268,16 @@ def collect_all_articles() -> List[InvestmentArticle]:
             all_articles.extend(result.articles)
             collection_stats['newsapi']['success'] = True
             collection_stats['newsapi']['count'] += len(result.articles)
-        logger.info(f"NewsAPI collection complete: {collection_stats['newsapi']['count']} articles")
+        if collection_stats['newsapi']['count'] > 0:
+            logger.info(f"NewsAPI collection complete: {collection_stats['newsapi']['count']} articles")
+        elif not collection_stats['newsapi']['logged']:
+            logger.warning("NewsAPI unavailable")
+            collection_stats['newsapi']['logged'] = True
     except Exception as e:
         error_msg = f"NewsAPI collection failed: {str(e)}"
-        logger.error(error_msg)
+        if not collection_stats['newsapi']['logged']:
+            logger.warning("NewsAPI unavailable")
+            collection_stats['newsapi']['logged'] = True
         collection_stats['newsapi']['error'] = error_msg
     
     # Collect from Reddit
@@ -276,16 +288,24 @@ def collect_all_articles() -> List[InvestmentArticle]:
             all_articles.extend(result.articles)
             collection_stats['reddit']['success'] = True
             collection_stats['reddit']['count'] += len(result.articles)
-        logger.info(f"Reddit collection complete: {collection_stats['reddit']['count']} articles")
+        if collection_stats['reddit']['count'] > 0:
+            logger.info(f"Reddit collection complete: {collection_stats['reddit']['count']} articles")
+        elif not collection_stats['reddit']['logged']:
+            logger.warning("Reddit unavailable")
+            collection_stats['reddit']['logged'] = True
     except Exception as e:
         error_msg = f"Reddit collection failed: {str(e)}"
-        logger.error(error_msg)
+        if not collection_stats['reddit']['logged']:
+            logger.warning("Reddit unavailable")
+            collection_stats['reddit']['logged'] = True
         collection_stats['reddit']['error'] = error_msg
     
     # Log summary
     total_collected = len(all_articles)
-    logger.info(f"Total articles collected: {total_collected}")
-    logger.info(f"Collection stats: {collection_stats}")
+    if total_collected > 0:
+        logger.info(f"Total articles collected: {total_collected}")
+    else:
+        logger.warning("No articles collected from any source, will use fallback dataset")
     
     # Store stats in a global variable for debugging
     global _last_collection_stats

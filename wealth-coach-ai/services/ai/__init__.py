@@ -1,6 +1,9 @@
 import os
 import requests
+import logging
 from typing import List, Dict, Any
+
+logger = logging.getLogger(__name__)
 
 
 class AIService:
@@ -61,6 +64,12 @@ class AIService:
                     content = choices[0].get('message', {}).get('content')
                     if content:
                         return content.strip()
+            except requests.exceptions.ConnectionError:
+                logger.warning("OpenRouter unavailable: connection error")
+            except requests.exceptions.Timeout:
+                logger.warning("OpenRouter unavailable: timeout")
+            except requests.exceptions.RequestException as e:
+                logger.warning(f"OpenRouter unavailable: {str(e)}")
             except Exception:
                 # Fall through to default response
                 pass

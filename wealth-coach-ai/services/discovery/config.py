@@ -17,7 +17,7 @@ class DiscoveryConfig:
     retry_attempts: int = 3
     
     # Cleaning settings
-    min_content_length: int = 100
+    min_content_length: int = 50
     max_content_length: int = 10000
     remove_html_tags: bool = True
     remove_special_chars: bool = True

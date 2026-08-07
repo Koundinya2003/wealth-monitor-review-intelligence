@@ -31,6 +31,9 @@ class PersonalizationEngine:
         """
         Calculate relevance score for an opportunity based on user profile.
         
+        Uses salary, monthly expenses, age, financial goal, and risk appetite
+        to score every investment opportunity from 0-100.
+        
         Args:
             opportunity: Opportunity dictionary with category, risk_level, etc.
             user_profile: User profile with salary, age, risk, goal, etc.
@@ -38,69 +41,223 @@ class PersonalizationEngine:
         Returns:
             Relevance score between 0 and 100
         """
-        score = 50.0  # Base score
+        score = 0.0  # Start from zero, build up based on fit
         
         # Extract user profile data
         user_risk = user_profile.get('risk', 'Medium').lower()
         user_goal = user_profile.get('goal', '').lower()
         user_age = user_profile.get('age', 30)
+        salary = user_profile.get('salary', 0)
+        expenses = user_profile.get('expenses', 0)
         monthly_investment = user_profile.get('monthly_investment', 0)
+        
+        # Calculate savings rate
+        savings_rate = 0
+        if salary > 0:
+            savings_rate = (salary - expenses) / salary * 100
         
         # Extract opportunity data
         opp_category = opportunity.get('category', '').lower()
         opp_risk = opportunity.get('risk_level', 'Medium').lower()
-        opp_min_investment = opportunity.get('min_investment', 0)
+        opp_horizon = opportunity.get('investment_horizon', '').lower()
+        opp_expected_return = opportunity.get('expected_return', '')
+        opp_confidence = opportunity.get('confidence_score', 50)
         
-        # Risk alignment (max +20 points)
+        # 1. Risk alignment (max +25 points)
         if user_risk == opp_risk:
-            score += 20
+            score += 25
         elif (user_risk == 'low' and opp_risk in ['low', 'medium']) or \
              (user_risk == 'high' and opp_risk in ['medium', 'high']) or \
              (user_risk == 'medium' and opp_risk == 'medium'):
-            score += 10
+            score += 15
+        elif (user_risk == 'low' and opp_risk == 'high') or \
+             (user_risk == 'high' and opp_risk == 'low'):
+            score += 5
         
-        # Goal alignment (max +20 points)
+        # 2. Goal alignment (max +25 points)
         goal_keywords = {
-            'emergency fund': ['emergency fund', 'liquid fund', 'savings'],
-            'retirement': ['ppf', 'nps', 'pension', 'retirement'],
-            'wealth creation': ['index funds', 'equity', 'mutual fund', 'sip'],
-            'buy house': ['debt', 'fixed deposit', 'bond', 'fd'],
-            'travel': ['liquid', 'short-term', 'high liquidity']
+            'emergency fund': ['emergency', 'liquid', 'savings', 'safety'],
+            'retirement': ['ppf', 'nps', 'pension', 'retirement', 'long-term'],
+            'wealth creation': ['index', 'equity', 'mutual', 'sip', 'growth', 'wealth'],
+            'buy house': ['debt', 'fixed', 'bond', 'fd', 'stable'],
+            'travel': ['liquid', 'short-term', 'flexible']
         }
         
+        goal_matched = False
         for goal, keywords in goal_keywords.items():
             if goal in user_goal:
                 for keyword in keywords:
                     if keyword in opp_category:
-                        score += 20
+                        score += 25
+                        goal_matched = True
                         break
+                if not goal_matched:
+                    # Partial match - check description too
+                    opp_desc = opportunity.get('description', '').lower()
+                    for keyword in keywords:
+                        if keyword in opp_desc:
+                            score += 15
+                            goal_matched = True
+                            break
                 break
         
-        # Affordability (max +10 points)
-        if monthly_investment > 0 and opp_min_investment > 0:
-            if monthly_investment >= opp_min_investment:
-                score += 10
-            elif monthly_investment >= opp_min_investment * 0.5:
-                score += 5
+        if not goal_matched:
+            score += 5  # Minimal score for non-matching goals
         
-        # Age-based adjustments (max +10 points)
+        # 3. Affordability based on salary and expenses (max +20 points)
+        if monthly_investment > 0:
+            # Estimate minimum investment needed based on category
+            est_min_investment = self._estimate_min_investment(opp_category, salary)
+            
+            if monthly_investment >= est_min_investment:
+                score += 20
+            elif monthly_investment >= est_min_investment * 0.5:
+                score += 12
+            elif monthly_investment >= est_min_investment * 0.25:
+                score += 6
+            else:
+                score += 2
+        
+        # 4. Age-based suitability (max +15 points)
         if user_age < 30:
-            # Young investors can take more risks
+            # Young investors: prefer growth-oriented, can handle risk
             if opp_risk in ['high', 'medium']:
-                score += 10
+                score += 15
+            elif opp_risk == 'low':
+                score += 8
         elif user_age < 40:
-            # Mid-career professionals
+            # Mid-career: balanced approach
             if opp_risk in ['medium', 'low']:
+                score += 15
+            elif opp_risk == 'high':
+                score += 8
+        elif user_age < 55:
+            # Pre-retirement: shift to stability
+            if opp_risk == 'low':
+                score += 15
+            elif opp_risk == 'medium':
                 score += 10
+            else:
+                score += 3
         else:
-            # Older investors should be conservative
+            # Near/at retirement: capital preservation
+            if opp_risk == 'low':
+                score += 15
+            elif opp_risk == 'medium':
+                score += 6
+            else:
+                score += 1
+        
+        # 5. Savings rate alignment (max +10 points)
+        if savings_rate >= 30:
+            # High saver - can invest more aggressively
+            if opp_risk in ['medium', 'high']:
+                score += 10
+            else:
+                score += 5
+        elif savings_rate >= 20:
+            # Moderate saver
+            if opp_risk == 'medium':
+                score += 10
+            elif opp_risk in ['low', 'high']:
+                score += 6
+        elif savings_rate >= 10:
+            # Low saver - need low-risk options
             if opp_risk == 'low':
                 score += 10
+            elif opp_risk == 'medium':
+                score += 5
+        else:
+            # Very low saver - emergency fund first
+            if 'emergency' in opp_category:
+                score += 10
+            elif opp_risk == 'low':
+                score += 5
+        
+        # 6. Confidence bonus (max +5 points)
+        if opp_confidence >= 80:
+            score += 5
+        elif opp_confidence >= 60:
+            score += 3
+        elif opp_confidence >= 40:
+            score += 1
         
         # Clamp score to 0-100
         score = max(0, min(100, score))
         
         return score
+    
+    def _estimate_min_investment(self, category: str, salary: float) -> float:
+        """
+        Estimate minimum investment amount for a category based on salary.
+        
+        Args:
+            category: Investment category
+            salary: User's monthly salary
+        
+        Returns:
+            Estimated minimum monthly investment
+        """
+        category_lower = category.lower()
+        
+        # Base minimums for different categories
+        if 'sip' in category_lower or 'mutual' in category_lower:
+            return 500  # SIPs can start at ₹500
+        elif 'index' in category_lower or 'etf' in category_lower:
+            return 1000  # Index funds/ETFs
+        elif 'ppf' in category_lower:
+            return 500  # PPF minimum
+        elif 'nps' in category_lower:
+            return 1000  # NPS minimum
+        elif 'gold' in category_lower:
+            return 1000  # Gold ETFs/SGBs
+        elif 'debt' in category_lower or 'fixed' in category_lower:
+            return 1000  # Debt funds
+        elif 'emergency' in category_lower or 'liquid' in category_lower:
+            return 500  # Liquid funds
+        elif 'tax' in category_lower:
+            return 500  # ELSS minimum
+        else:
+            # Default: 5% of salary or ₹1000, whichever is higher
+            return max(1000, salary * 0.05)
+    
+    def get_star_rating(self, relevance_score: float) -> str:
+        """
+        Convert relevance score to star rating.
+        
+        Args:
+            relevance_score: Relevance score (0-100)
+        
+        Returns:
+            Star rating string with label
+        """
+        if relevance_score >= 80:
+            return "★★★★★ Highly Recommended"
+        elif relevance_score >= 60:
+            return "★★★★ Good Fit"
+        elif relevance_score >= 40:
+            return "★★★ Moderate Fit"
+        else:
+            return "★ Not Recommended"
+    
+    def get_star_rating_color(self, relevance_score: float) -> str:
+        """
+        Get color for star rating based on score.
+        
+        Args:
+            relevance_score: Relevance score (0-100)
+        
+        Returns:
+            Color hex code
+        """
+        if relevance_score >= 80:
+            return "#22C55E"  # Green
+        elif relevance_score >= 60:
+            return "#60A5FA"  # Blue
+        elif relevance_score >= 40:
+            return "#F59E0B"  # Yellow
+        else:
+            return "#EF4444"  # Red
     
     def generate_personalization_reason(self, opportunity: Dict[str, Any], 
                                         user_profile: Dict[str, Any],
@@ -200,12 +357,16 @@ class PersonalizationEngine:
             try:
                 relevance_score = self.calculate_relevance_score(opp, user_profile)
                 reason = self.generate_personalization_reason(opp, user_profile, relevance_score)
+                star_rating = self.get_star_rating(relevance_score)
+                star_color = self.get_star_rating_color(relevance_score)
                 
                 # Create personalized opportunity
                 personalized_opp = {
                     **opp,  # Include all original opportunity data
                     'relevance_score': relevance_score,
-                    'personalization_reason': reason
+                    'personalization_reason': reason,
+                    'star_rating': star_rating,
+                    'star_rating_color': star_color
                 }
                 
                 scored_opportunities.append(personalized_opp)

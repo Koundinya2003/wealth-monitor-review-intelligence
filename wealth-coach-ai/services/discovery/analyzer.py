@@ -204,9 +204,15 @@ Provide analysis in the following JSON structure:
 {{
     "top_opportunities": [
         {{
-            "title": "Opportunity title",
-            "description": "Brief description",
-            "category": "category name",
+            "title": "Investment opportunity title",
+            "description": "Brief description of the opportunity",
+            "category": "category name (e.g., Index Fund, ETF, Debt Fund, Gold, SIP, Tax Saving, PPF, NPS, Emergency Fund)",
+            "confidence_score": 0-100,
+            "risk_level": "Low/Medium/High",
+            "investment_horizon": "Expected time horizon (e.g., Short-term 0-1 yr, Medium-term 1-5 yrs, Long-term 5-15 yrs)",
+            "expected_return": "Expected annual return range (e.g., 8-12%)",
+            "reasoning": "Why this is a good investment opportunity",
+            "suitable_for": "Who this investment is suitable for",
             "relevance_score": 0.0-1.0,
             "source": "source name"
         }}
@@ -421,9 +427,15 @@ Provide analysis in the following JSON structure:
 {{
     "top_opportunities": [
         {{
-            "title": "Opportunity title",
+            "title": "Investment opportunity title",
             "description": "Brief description of the opportunity",
-            "category": "category name",
+            "category": "category name (e.g., Index Fund, ETF, Debt Fund, Gold, SIP, Tax Saving, PPF, NPS, Emergency Fund)",
+            "confidence_score": 0-100,
+            "risk_level": "Low/Medium/High",
+            "investment_horizon": "Expected time horizon (e.g., Short-term 0-1 yr, Medium-term 1-5 yrs, Long-term 5-15 yrs)",
+            "expected_return": "Expected annual return range (e.g., 8-12%)",
+            "reasoning": "Why this is a good investment opportunity",
+            "suitable_for": "Who this investment is suitable for",
             "relevance_score": 0.0-1.0,
             "source": "source name"
         }}

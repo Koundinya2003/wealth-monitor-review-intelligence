@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from dotenv import load_dotenv
 from config.theme import apply_theme
 from database import db
@@ -27,18 +28,11 @@ def main():
 
 def show_onboarding():
     """Display simple onboarding form"""
-    st.markdown(
-        """
-    <div style="text-align: center; padding: 48px 24px;">
-        <h1 style="font-size: 48px; margin-bottom: 16px;">💰 Wealth Coach AI</h1>
-        <p style="font-size: 20px; color: #9CA3AF;">Turn every paycheck into a personalized wealth plan.</p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
+    st.title("💰 Wealth Coach AI")
+    st.caption("Turn every paycheck into a personalized wealth plan")
+    
+    st.markdown("---")
+    
     # Input form
     col1, col2, col3 = st.columns(3)
     
@@ -85,12 +79,12 @@ def show_onboarding():
             ["Low", "Medium", "High"]
         )
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("---")
     
     # Generate button
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
-    with col_btn2:
-        if st.button("🚀 Generate My Wealth Plan", use_container_width=True, type="primary"):
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("🚀 Generate My Wealth Plan", width="stretch", type="primary"):
             # Save profile
             db.save_profile(salary, expenses, age, goal, risk)
             
@@ -109,18 +103,12 @@ def show_onboarding():
 
 
 def show_dashboard(profile):
-    """Display dashboard with results"""
-    # Hero section
-    st.markdown(
-        """
-    <div style="text-align: center; padding: 24px 0;">
-        <h1 style="font-size: 36px; margin-bottom: 8px;">👋 Welcome Back!</h1>
-        <p style="font-size: 18px; color: #9CA3AF;">Here's your personalized wealth plan</p>
-    </div>
-    """,
-        unsafe_allow_html=True,
-    )
-
+    """Display dashboard with results - redesigned with native Streamlit components"""
+    st.title("👋 Welcome Back!")
+    st.caption("Here's your personalized wealth plan")
+    
+    st.markdown("---")
+    
     # Calculate metrics
     metrics = planner.calculate_plan(profile.salary, profile.expenses, profile.goal, profile.risk)
     
@@ -136,64 +124,381 @@ def show_dashboard(profile):
             f"then focus on {profile.goal.lower()} through low-cost index funds. "
             f"Your {profile.risk.lower()} risk appetite suggests a balanced approach to wealth building."
         )
-
-    # Metrics section
-    st.markdown("### 📊 Your Financial Metrics")
     
-    col1, col2, col3 = st.columns(3)
+    # ------------------------------------------------------------------
+    # SECTION 1: My Money at a Glance
+    # ------------------------------------------------------------------
+    st.markdown("## 💰 My Money at a Glance")
+    st.caption("Your financial snapshot at a glance")
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
     with col1:
-        st.metric("Monthly Salary", f"₹{profile.salary:,.0f}")
-        st.metric("Monthly Expenses", f"₹{profile.expenses:,.0f}")
+        st.metric(
+            label="Monthly Salary",
+            value=f"₹{profile.salary:,.0f}",
+            delta=None
+        )
     
     with col2:
-        st.metric("Money Available", f"₹{metrics['money_available']:,.0f}")
-        st.metric("Savings Rate", f"{metrics['savings_percent']:.1f}%")
+        st.metric(
+            label="Monthly Expenses",
+            value=f"₹{profile.expenses:,.0f}",
+            delta=None
+        )
     
     with col3:
-        st.metric("Emergency Fund Target", f"₹{metrics['emergency_fund_target']:,.0f}")
-        st.metric("Suggested Investment", f"₹{metrics['suggested_investment']:,.0f}")
+        st.metric(
+            label="Savings Rate",
+            value=f"{metrics['savings_percent']:.1f}%",
+            delta=f"{'Good' if metrics['savings_percent'] >= 20 else 'Needs improvement'}"
+        )
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    with col4:
+        st.metric(
+            label="Monthly Investment Capacity",
+            value=f"₹{metrics['money_available']:,.0f}",
+            delta=None
+        )
     
-    # Investment Readiness Score
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # SECTION 2: Where Your ₹ Goes
+    # ------------------------------------------------------------------
+    st.markdown("## 📊 Where Your ₹ Goes")
+    st.caption("Suggested monthly allocation based on your profile")
+    
+    money_available = metrics['money_available']
+    savings_rate = metrics['savings_percent']
+    
+    if savings_rate < 10:
+        allocation = {
+            'Emergency Fund': money_available * 0.5,
+            'PPF': money_available * 0.3,
+            'Debt Fund': money_available * 0.2,
+        }
+    elif savings_rate < 20:
+        allocation = {
+            'Emergency Fund': money_available * 0.15,
+            'Index Funds': money_available * 0.35,
+            'ELSS': money_available * 0.25,
+            'Debt Fund': money_available * 0.15,
+            'Gold': money_available * 0.1,
+        }
+    else:
+        allocation = {
+            'Index Funds': money_available * 0.35,
+            'ELSS': money_available * 0.2,
+            'NPS': money_available * 0.15,
+            'PPF': money_available * 0.15,
+            'Gold': money_available * 0.1,
+            'Debt Fund': money_available * 0.05,
+        }
+    
+    # Display allocation table
+    allocation_data = []
+    for category, amount in allocation.items():
+        percentage = (amount / money_available * 100) if money_available > 0 else 0
+        allocation_data.append({
+            'Category': category,
+            'Monthly Amount': f"₹{amount:,.0f}",
+            'Percentage': f"{percentage:.1f}%"
+        })
+    
+    df = pd.DataFrame(allocation_data)
+    st.dataframe(df, width="stretch", hide_index=True)
+    
+    # Display horizontal bar chart
+    import plotly.graph_objects as go
+    fig = go.Figure(go.Bar(
+        x=list(allocation.values()),
+        y=list(allocation.keys()),
+        orientation='h',
+        marker=dict(
+            color=['#22C55E', '#2563EB', '#60A5FA', '#F59E0B', '#8B5CF6', '#EF4444'][:len(allocation)],
+            line=dict(color='#111827', width=1)
+        ),
+        text=[f"{(amt/money_available*100):.1f}%" for amt in allocation.values()] if money_available > 0 else [],
+        textposition='outside',
+        hovertemplate='<b>%{y}</b><br>₹%{x:,.0f}<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title='',
+        xaxis_title='Monthly Amount (₹)',
+        yaxis_title='',
+        template='plotly_dark',
+        paper_bgcolor='#111827',
+        plot_bgcolor='#111827',
+        font=dict(color='#F9FAFB'),
+        height=300,
+        showlegend=False,
+        xaxis=dict(gridcolor='#1F2937', tickprefix='₹', tickformat=','),
+        yaxis=dict(gridcolor='#1F2937')
+    )
+    
+    st.plotly_chart(fig, width="stretch")
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # SECTION 3: Your Wealth Journey
+    # ------------------------------------------------------------------
+    st.markdown("## 🗺️ Your Wealth Journey")
+    st.caption("Projected wealth growth with key milestones")
+    
+    suggested_investment = metrics['suggested_investment']
+    monthly_return = 0.12 / 12  # 12% annual return
+    
+    # Calculate values at key years
+    years = [1, 3, 5, 7, 10]
+    values = []
+    
+    cumulative = 0
+    for year in range(1, 11):
+        for month in range(12):
+            cumulative = cumulative * (1 + monthly_return) + suggested_investment
+        if year in years:
+            values.append(cumulative)
+    
+    # Display milestones as metrics
+    col1, col2, col3, col4, col5 = st.columns(5)
+    
+    for col, year, value in zip([col1, col2, col3, col4, col5], years, values):
+        with col:
+            st.metric(
+                label=f"Year {year}",
+                value=f"₹{value/100000:.1f}L",
+                delta=None
+            )
+    
+    # Create line chart
+    year_range = list(range(1, 11))
+    year_values = []
+    cumulative = 0
+    for year in range(1, 11):
+        for month in range(12):
+            cumulative = cumulative * (1 + monthly_return) + suggested_investment
+        year_values.append(cumulative)
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Scatter(
+        x=year_range,
+        y=year_values,
+        mode='lines+markers',
+        name='Portfolio Value',
+        line=dict(color='#2563EB', width=3),
+        marker=dict(size=10, color='#2563EB'),
+        hovertemplate='<b>Year %{x}</b><br>₹%{y:,.0f}<extra></extra>'
+    ))
+    
+    # Add milestone markers
+    for year, value in zip(years, values):
+        fig.add_annotation(
+            x=year,
+            y=value,
+            text=f"₹{value/100000:.1f}L",
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=1,
+            arrowwidth=2,
+            arrowcolor="#60A5FA",
+            ax=0,
+            ay=-40
+        )
+    
+    fig.update_layout(
+        title='',
+        xaxis_title='Years',
+        yaxis_title='Portfolio Value (₹)',
+        template='plotly_dark',
+        paper_bgcolor='#111827',
+        plot_bgcolor='#111827',
+        font=dict(color='#F9FAFB'),
+        height=400,
+        showlegend=False,
+        xaxis=dict(gridcolor='#1F2937', tickmode='linear', tick0=1, dtick=1),
+        yaxis=dict(gridcolor='#1F2937', tickprefix='₹', tickformat=',')
+    )
+    
+    st.plotly_chart(fig, width="stretch")
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # SECTION 4: What Happens If You Increase SIP?
+    # ------------------------------------------------------------------
+    st.markdown("## 📈 What Happens If You Increase SIP?")
+    st.caption("See how increasing your monthly investment impacts your wealth")
+    
+    base_sip = max(1000, int(metrics['money_available'] * 0.2))
+    sip_amounts = [base_sip, base_sip * 2, base_sip * 3, base_sip * 4]
+    
+    years = [1, 3, 5, 10]
+    
+    # Calculate corpus for each SIP amount
+    comparison_data = []
+    for sip in sip_amounts:
+        row = {'Monthly SIP': f"₹{sip:,.0f}"}
+        for year in years:
+            cumulative = 0
+            for _ in range(year * 12):
+                cumulative = cumulative * (1 + monthly_return) + sip
+            row[f'Year {year}'] = f"₹{cumulative/100000:.1f}L"
+        comparison_data.append(row)
+    
+    df = pd.DataFrame(comparison_data)
+    st.dataframe(df, width="stretch", hide_index=True)
+    
+    # Create comparison chart
+    fig = go.Figure()
+    
+    colors = ['#22C55E', '#60A5FA', '#F59E0B', '#EF4444']
+    for idx, sip in enumerate(sip_amounts):
+        values = []
+        cumulative = 0
+        for year in range(1, 11):
+            for _ in range(12):
+                cumulative = cumulative * (1 + monthly_return) + sip
+            values.append(cumulative)
+        
+        fig.add_trace(go.Scatter(
+            x=list(range(1, 11)),
+            y=values,
+            mode='lines+markers',
+            name=f'₹{sip:,.0f}/month',
+            line=dict(color=colors[idx], width=2),
+            marker=dict(size=6),
+            hovertemplate=f'<b>₹{sip:,.0f}/month</b><br>Year %{{x}}<br>₹%{{y:,.0f}}<extra></extra>'
+        ))
+    
+    fig.update_layout(
+        title='',
+        xaxis_title='Years',
+        yaxis_title='Portfolio Value (₹)',
+        template='plotly_dark',
+        paper_bgcolor='#111827',
+        plot_bgcolor='#111827',
+        font=dict(color='#F9FAFB'),
+        height=400,
+        showlegend=True,
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1),
+        xaxis=dict(gridcolor='#1F2937', tickmode='linear', tick0=1, dtick=1),
+        yaxis=dict(gridcolor='#1F2937', tickprefix='₹', tickformat=',')
+    )
+    
+    st.plotly_chart(fig, width="stretch")
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # SECTION 5: Investment Readiness Score
+    # ------------------------------------------------------------------
     score = calculate_investment_score(metrics)
     score_color = "#22C55E" if score >= 70 else "#F59E0B" if score >= 40 else "#EF4444"
-    st.markdown(f"""
-    <div style="text-align: center; padding: 24px; background-color: #111827; border-radius: 12px; margin: 16px 0;">
-        <div style="font-size: 14px; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.5px;">Investment Readiness Score</div>
-        <div style="font-size: 48px; font-weight: 700; color: {score_color}; margin: 8px 0;">{score}/100</div>
-    </div>
-    """, unsafe_allow_html=True)
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("## 🎯 Investment Readiness Score")
+    st.caption("How ready are you to start investing?")
     
-    # AI Recommendation
-    st.markdown("### 🤖 AI Recommendation")
-    st.markdown(f"""
-    <div class="custom-card" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%); border: 1px solid rgba(37, 99, 235, 0.3);">
-        <p style="font-size: 16px; line-height: 1.6; color: #F9FAFB;">{ai_recommendation}</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Charts
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.markdown("### 📈 Projected Wealth Growth (10 Years)")
-        render_wealth_projection_chart(metrics['suggested_investment'])
-    
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("### 💰 Investment Allocation")
-        render_allocation_chart(profile.goal, metrics['suggested_investment'])
+        st.metric(
+            label="Your Score",
+            value=f"{score}/100",
+            delta=None
+        )
+        
+        if score >= 70:
+            st.success("✅ Excellent! You're ready to start investing.")
+        elif score >= 40:
+            st.warning("⚠️ You're on the right track. Build your emergency fund first.")
+        else:
+            st.error("❌ Focus on increasing your savings rate before investing.")
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # SECTION 6: AI Recommendation
+    # ------------------------------------------------------------------
+    st.markdown("## 🤖 AI Recommendation")
+    st.caption("Personalized advice based on your profile")
+    
+    st.info(f"**AI Recommendation:** {ai_recommendation}")
+    
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # SECTION 7: Action Plan
+    # ------------------------------------------------------------------
+    st.markdown("## ✅ Your Action Plan")
+    st.caption("Simple steps to get started")
+    
+    actions = [
+        {
+            'timeline': 'Week 1',
+            'action': 'Open emergency fund',
+            'details': f"Set up a liquid fund with ₹{max(500, int(metrics['money_available'] * 0.1)):,.0f} monthly auto-debit",
+            'icon': '🛡️'
+        },
+        {
+            'timeline': 'Week 2',
+            'action': 'Start SIP',
+            'details': f"Begin SIP of ₹{max(1000, int(metrics['money_available'] * 0.3)):,.0f} in index fund",
+            'icon': '📈'
+        },
+        {
+            'timeline': 'Month 2',
+            'action': 'Review expenses',
+            'details': "Track spending for 30 days, identify areas to cut back",
+            'icon': '📊'
+        },
+        {
+            'timeline': 'Month 3',
+            'action': 'Increase SIP',
+            'details': f"Increase SIP to ₹{metrics['suggested_investment']:,.0f} if savings rate improved",
+            'icon': '💰'
+        },
+    ]
+    
+    for action in actions:
+        with st.container():
+            col1, col2, col3 = st.columns([1, 3, 1])
+            with col1:
+                st.markdown(f"### {action['icon']}")
+                st.caption(action['timeline'])
+            with col2:
+                st.markdown(f"**{action['action']}**")
+                st.caption(action['details'])
+            with col3:
+                if st.button("Mark Done", key=f"dashboard_action_{action['timeline']}", width="stretch"):
+                    st.success(f"✓ {action['action']} completed!")
+    
+    st.divider()
+    
+    # ------------------------------------------------------------------
+    # Navigation to other pages
+    # ------------------------------------------------------------------
+    st.markdown("## 📚 Explore More")
+    st.caption("Dive deeper into investment options")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🔍 Investment Discovery", width="stretch", type="primary"):
+            st.switch_page("pages/investment_discovery.py")
+    with col2:
+        if st.button("⚖️ Investment Comparison", width="stretch", type="primary"):
+            st.switch_page("pages/investment_comparison.py")
+    
+    st.divider()
     
     # Update profile button
-    if st.button("🔄 Update My Profile", use_container_width=True):
+    if st.button("🔄 Update My Profile", width="stretch"):
         db.delete_latest_profile()
         st.rerun()
+    
+    # Disclaimer
+    st.caption("⚠️ **Disclaimer:** This is AI-generated analysis based on publicly available information. "
+               "This is not financial advice. Always conduct your own research or consult a qualified financial advisor "
+               "before making investment decisions.")
 
 
 def calculate_investment_score(metrics: dict) -> int:
@@ -228,91 +533,6 @@ def calculate_investment_score(metrics: dict) -> int:
         score += 10
     
     return max(0, min(100, score))
-
-
-def render_wealth_projection_chart(suggested_investment: float):
-    """Render 10-year wealth projection chart"""
-    import plotly.graph_objects as go
-    
-    years = list(range(1, 11))
-    values = []
-    cumulative = 0
-    monthly_return = 0.12 / 12  # 12% annual return
-    
-    for year in years:
-        for month in range(12):
-            cumulative = cumulative * (1 + monthly_return) + suggested_investment
-        values.append(cumulative)
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatter(
-        x=years,
-        y=values,
-        mode='lines+markers',
-        name='Portfolio Value',
-        line=dict(color='#2563EB', width=3),
-        marker=dict(size=8, color='#2563EB')
-    ))
-    
-    fig.update_layout(
-        title='',
-        xaxis_title='Years',
-        yaxis_title='Amount (₹)',
-        hovermode='x unified',
-        template='plotly_dark',
-        paper_bgcolor='#111827',
-        plot_bgcolor='#111827',
-        font=dict(color='#F9FAFB'),
-        height=400,
-        showlegend=False
-    )
-    
-    fig.update_xaxes(gridcolor='#1F2937')
-    fig.update_yaxes(gridcolor='#1F2937', tickprefix='₹', tickformat=',')
-    
-    st.plotly_chart(fig, width='stretch')
-
-
-def render_allocation_chart(goal: str, suggested_investment: float):
-    """Render investment allocation pie chart"""
-    import plotly.graph_objects as go
-    
-    # Simple allocation based on goal
-    if goal == "Emergency Fund":
-        labels = ['Emergency Fund', 'Liquid Fund', 'Short-term FD']
-        values = [suggested_investment * 0.5, suggested_investment * 0.3, suggested_investment * 0.2]
-        colors = ['#22C55E', '#2563EB', '#F59E0B']
-    elif goal == "Retirement":
-        labels = ['Equity Funds', 'Debt Funds', 'PPF/NPS']
-        values = [suggested_investment * 0.6, suggested_investment * 0.3, suggested_investment * 0.1]
-        colors = ['#2563EB', '#22C55E', '#F59E0B']
-    else:
-        labels = ['Index Funds', 'ELSS', 'Debt Funds', 'Gold ETF']
-        values = [suggested_investment * 0.4, suggested_investment * 0.3, suggested_investment * 0.2, suggested_investment * 0.1]
-        colors = ['#2563EB', '#22C55E', '#F59E0B', '#EF4444']
-    
-    fig = go.Figure(data=[go.Pie(
-        labels=labels,
-        values=values,
-        hole=0.4,
-        marker=dict(colors=colors, line=dict(color='#111827', width=2)),
-        textinfo='label+percent',
-        textposition='outside',
-        hovertemplate='<b>%{label}</b><br>₹%{value:,.0f}<br>%{percent}<extra></extra>'
-    )])
-    
-    fig.update_layout(
-        title='',
-        template='plotly_dark',
-        paper_bgcolor='#111827',
-        plot_bgcolor='#111827',
-        font=dict(color='#F9FAFB'),
-        height=400,
-        showlegend=False
-    )
-    
-    st.plotly_chart(fig, width='stretch')
 
 
 if __name__ == '__main__':
