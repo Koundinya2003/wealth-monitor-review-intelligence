@@ -1,0 +1,279 @@
+# Wealth Coach AI 💰
+
+> An AI-powered personal finance coach that helps everyday Indians understand, manage, and grow their wealth through personalized investment planning and intelligent market insights.
+
+<p align="center">
+  <a href="https://wealth-monitor-review-intelligence-9oixsvognm4vryrrlagbta.streamlit.app/"><strong>🚀 Live Demo</strong></a>
+</p>
+
+---
+
+## Overview
+
+Managing personal finances should not require a financial advisor or years of investing experience.
+
+**Wealth Coach AI** is an AI-first financial planning platform built for individuals earning anywhere from **₹20,000 to ₹5,00,000 per month**. Instead of overwhelming users with financial jargon, the platform analyzes their financial profile and provides personalized investment recommendations, wealth projections, and market opportunities tailored to their goals.
+
+The platform combines traditional financial planning with AI-powered investment discovery to make wealth creation simple, accessible, and actionable.
+
+---
+
+## Features
+
+### 📊 Personalized Wealth Dashboard
+
+- Financial health score
+- Monthly savings analysis
+- Net worth tracking
+- Expense insights
+- Goal progress monitoring
+
+---
+
+### 💼 AI Investment Planner
+
+Generates personalized investment allocations based on:
+
+- Salary
+- Monthly expenses
+- Age
+- Financial goals
+- Risk appetite
+
+Recommended allocations include:
+
+- Index Funds
+- Mutual Funds
+- Debt Funds
+- Gold ETFs
+- Emergency Fund
+- Tax Saving Investments
+
+---
+
+### 🔍 AI Investment Discovery Engine
+
+Discovers investment opportunities from multiple sources including:
+
+- Financial RSS feeds
+- Market news
+- Reddit investing communities
+- Curated fallback investment dataset
+
+AI extracts:
+
+- Investment opportunities
+- Market trends
+- Risk indicators
+- Key insights
+- Actionable recommendations
+
+---
+
+### 📈 Investment Comparison
+
+Compare investments across multiple dimensions:
+
+- Expected Returns
+- Risk
+- Liquidity
+- Tax Benefits
+- Investment Horizon
+- Minimum Investment
+- Suitability
+
+---
+
+### 🤖 AI Financial Advisor
+
+Generates personalized financial guidance including:
+
+- Investment suggestions
+- Wealth-building strategies
+- Risk management
+- Portfolio recommendations
+- Market summaries
+
+---
+
+### 📉 Wealth Growth Simulator
+
+Visualize how your investments grow over time.
+
+Simulate different monthly investment amounts and compare long-term wealth outcomes.
+
+---
+
+## Architecture
+
+```
+wealth-coach-ai/
+
+├── app.py
+├── pages/
+│   ├── Dashboard
+│   ├── Investment Discovery
+│   ├── Investment Comparison
+│   └── Wealth Planner
+│
+├── services/
+│   ├── ai/
+│   ├── discovery/
+│   └── finance/
+│
+├── database/
+├── config/
+├── data/
+└── assets/
+```
+
+---
+
+## Tech Stack
+
+### Frontend
+
+- Streamlit
+
+### Backend
+
+- Python
+
+### AI
+
+- OpenRouter
+- DeepSeek V3
+
+### Data Processing
+
+- Pandas
+- NumPy
+
+### Data Sources
+
+- RSS Feeds
+- NewsAPI
+- Reddit
+- Curated Investment Dataset
+
+### Database
+
+- SQLite
+
+---
+
+## How It Works
+
+```text
+User Profile
+        │
+        ▼
+Financial Analysis
+        │
+        ▼
+Investment Planning
+        │
+        ▼
+Market Discovery
+        │
+        ▼
+AI Opportunity Analysis
+        │
+        ▼
+Personalized Recommendations
+```
+
+---
+
+## Screenshots
+
+| Dashboard | Investment Discovery |
+|-----------|----------------------|
+| Add screenshots here | Add screenshots here |
+
+---
+
+## Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/Koundinya2003/wealth-monitor-review-intelligence.git
+```
+
+Move into the project
+
+```bash
+cd wealth-monitor-review-intelligence/wealth-coach-ai
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Create a `.env` file
+
+```env
+OPENROUTER_API_KEY=your_api_key
+OPENROUTER_MODEL=deepseek/deepseek-chat-v3-0324:free
+
+NEWSAPI_API_KEY=your_key
+```
+
+Run the application
+
+```bash
+streamlit run app.py
+```
+
+---
+
+## Live Demo
+
+**Try the application here**
+
+https://wealth-monitor-review-intelligence-9oixsvognm4vryrrlagbta.streamlit.app/
+
+---
+
+## Future Improvements
+
+- Live NSE & BSE market integration
+- Real-time mutual fund NAV tracking
+- Portfolio rebalancing suggestions
+- Goal-based financial planning
+- AI-powered SIP optimization
+- Tax planning assistant
+- Brokerage integrations
+- Stock and ETF screening
+- Financial document parsing
+- Mobile application
+
+---
+
+## Why This Project?
+
+Most personal finance applications focus on tracking expenses.
+
+**Wealth Coach AI** focuses on **growing wealth**.
+
+The goal is to simplify investing for first-time investors by combining personalized financial planning with AI-driven investment discovery, making wealth management accessible to everyone regardless of their financial background.
+
+---
+
+## Author
+
+**Aditya K. Koundinya**
+
+- GitHub: https://github.com/Koundinya2003
+- LinkedIn: https://www.linkedin.com/in/adityakkoundinya/
+
+---
+
+## License
+
+This project is intended for educational and portfolio purposes.
+
+Financial recommendations generated by the application should not be considered professional investment advice.
