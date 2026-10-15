@@ -1,0 +1,386 @@
+<title>Wealth Coach AI one sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Identity: a paycheck that splits and compounds. Cool slate paper, indigo ink,
+   marigold for money that gets invested, leaf green for growth, coral for risk. */
+:root {
+  --bg: #edf0f7;
+  --card: #ffffff;
+  --ink: #1a1e3c;
+  --muted: #5d6384;
+  --rule: #d3d8e8;
+  --gold: #d9780f;
+  --gold-soft: #fbe6c8;
+  --leaf: #23855a;
+  --leaf-soft: #d3eedf;
+  --coral: #d24a43;
+  --sky: #3f63c9;
+  --hero-bg: #1a1e3c;
+  --hero-fg: #edf0f7;
+  --display: "Syne", "Trebuchet MS", sans-serif;
+  --body: "Figtree", "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10122a; --card: #181b38; --ink: #eef0fb; --muted: #a2a7c8; --rule: #2d3260;
+    --gold: #ffad47; --gold-soft: #3d2b12; --leaf: #5fd394; --leaf-soft: #173a2b; --coral: #ff7d73; --sky: #8ea9ff; --hero-bg: #1d2150; --hero-fg: #eef0fb;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #10122a; --card: #181b38; --ink: #eef0fb; --muted: #a2a7c8; --rule: #2d3260;
+  --gold: #ffad47; --gold-soft: #3d2b12; --leaf: #5fd394; --leaf-soft: #173a2b; --coral: #ff7d73; --sky: #8ea9ff; --hero-bg: #1d2150; --hero-fg: #eef0fb;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15px;
+  line-height: 1.45;
+  margin: 0;
+}
+.sheet { width: 960px; margin: 0 auto; padding: 12px 20px; display: grid; gap: 0; }
+.sheet > section { padding: 24px 28px 26px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; }
+h2 { font-size: 28px; font-weight: 800; line-height: 1.02; letter-spacing: -0.015em; }
+p { margin: 0; }
+.eyebrow { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; color: var(--gold); text-transform: uppercase; }
+.top { display: grid; grid-template-columns: 1.25fr 1fr; gap: 30px; align-items: end; margin-bottom: 20px; }
+.top p { color: var(--muted); font-size: 14.5px; }
+.rupee { font-family: var(--body); }
+.rise { animation: rise 0.7s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.pop { animation: pop 0.5s cubic-bezier(.3,1.6,.5,1) both; transform-box: fill-box; transform-origin: center; }
+@keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.d1 { animation-delay: 0.15s; } .d2 { animation-delay: 0.35s; } .d3 { animation-delay: 0.55s; } .d4 { animation-delay: 0.75s; } .d5 { animation-delay: 0.95s; } .d6 { animation-delay: 1.15s; } .d7 { animation-delay: 1.35s; } .d8 { animation-delay: 1.55s; }
+
+/* ---------- hero ---------- */
+.hero { background: var(--hero-bg); color: var(--hero-fg); border-radius: 0 0 0 0; display: grid; grid-template-columns: 1fr 1.05fr; gap: 30px; position: relative; overflow: hidden; }
+.hero .eyebrow { color: var(--gold); }
+.hero h1 { font-size: 66px; font-weight: 800; line-height: 0.9; letter-spacing: -0.03em; margin-top: 12px; color: var(--hero-fg); }
+.hero h1 em { font-style: normal; color: var(--gold); }
+.hero .claim { font-size: 21px; line-height: 1.25; margin-top: 16px; font-weight: 600; max-width: 22ch; }
+.hero .who { margin-top: 14px; font-size: 14px; opacity: 0.78; max-width: 40ch; }
+.hero .q { margin-top: 18px; border-left: 3px solid var(--gold); padding: 4px 0 4px 12px; font-size: 15px; font-style: italic; }
+.hero .link { margin-top: 16px; font-family: var(--mono); font-size: 11.5px; color: var(--gold); }
+.graph { position: relative; display: flex; flex-direction: column; justify-content: space-between; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14); padding: 14px 14px 10px; }
+.graph .gl { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; opacity: 0.8; }
+.graph svg { width: 100%; height: auto; display: block; overflow: visible; }
+.graph text { font-family: var(--mono); font-size: 10.5px; fill: var(--hero-fg); opacity: 0.75; }
+.graph .big { font-family: var(--display); font-weight: 800; font-size: 26px; fill: var(--gold); opacity: 1; }
+.graph .grid line { stroke: var(--hero-fg); opacity: 0.12; }
+.curve { fill: none; stroke: var(--gold); stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 100; animation: draw 7s ease-in-out infinite; }
+.area { fill: var(--gold); opacity: 0.14; animation: area 7s ease-in-out infinite; }
+@keyframes draw { 0% { stroke-dashoffset: 100; opacity: 1; } 55%, 88% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes area { 0%, 40% { opacity: 0; } 60%, 88% { opacity: 0.14; } 100% { opacity: 0; } }
+.coin { animation: drop 1.75s cubic-bezier(.5,0,.8,.6) infinite; }
+.coin circle { fill: var(--gold); }
+.coin text { fill: #1a1e3c; font-family: var(--body); font-size: 11px; font-weight: 700; opacity: 1; }
+@keyframes drop { 0% { transform: translateY(-30px); opacity: 0; } 15% { opacity: 1; } 75% { opacity: 1; } 100% { transform: translateY(60px); opacity: 0; } }
+.graph .foot { font-size: 11.5px; opacity: 0.72; margin-top: 6px; }
+
+/* ---------- planner ---------- */
+.plan { background: var(--card); border-top: 6px solid var(--gold); }
+.inputs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.inputs span { font-family: var(--mono); font-size: 12px; padding: 5px 10px; border: 1px solid var(--rule); background: var(--bg); }
+.inputs span b { color: var(--gold); font-weight: 500; }
+.split { display: grid; grid-template-columns: 60% 32% 8%; height: 54px; margin: 6px 0 4px; }
+.split div { display: flex; align-items: center; padding-left: 12px; font-weight: 700; font-size: 14px; transform-origin: left; animation: grow 0.9s cubic-bezier(.2,.8,.2,1) both; overflow: hidden; white-space: nowrap; }
+.split .exp { background: var(--rule); color: var(--ink); }
+.split .inv { background: var(--gold); color: #1a1e3c; }
+.split .kept { background: var(--leaf); color: #ffffff; padding-left: 6px; font-size: 11px; }
+.split-l { display: grid; grid-template-columns: 60% 32% 8%; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.outs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 18px; border-top: 2px solid var(--ink); }
+.out { padding: 12px 14px 0 0; }
+.out + .out { border-left: 1px solid var(--rule); padding-left: 14px; }
+.out .v { font-family: var(--display); font-weight: 800; font-size: 28px; line-height: 1; }
+.out .k { font-size: 13px; font-weight: 600; margin-top: 6px; }
+.out .f { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+.score { margin-top: 20px; display: grid; grid-template-columns: 150px 1fr; gap: 22px; align-items: center; background: var(--bg); padding: 14px 18px; }
+.ring { position: relative; width: 130px; height: 130px; }
+.ring svg { width: 130px; height: 130px; transform: rotate(-90deg); }
+.ring .bgc { fill: none; stroke: var(--rule); stroke-width: 12; }
+.ring .fg { fill: none; stroke: var(--leaf); stroke-width: 12; stroke-linecap: round; stroke-dasharray: 339.3; stroke-dashoffset: 91.6; animation: ring 1.6s cubic-bezier(.2,.8,.2,1) both 0.3s; }
+@keyframes ring { from { stroke-dashoffset: 339.3; } to { stroke-dashoffset: 91.6; } }
+.ring .n { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; font-family: var(--display); font-weight: 800; font-size: 34px; line-height: 0.9; }
+.ring .n small { display: block; margin-top: 8px; line-height: 1.2; font-family: var(--mono); font-size: 10.5px; font-weight: 400; color: var(--muted); }
+.parts { display: grid; gap: 8px; }
+.part { display: grid; grid-template-columns: 190px 1fr 56px; gap: 12px; align-items: center; font-size: 13px; }
+.part .t { height: 12px; background: var(--card); border: 1px solid var(--rule); position: relative; }
+.part .t i { position: absolute; inset: 0 auto 0 0; background: var(--leaf); transform-origin: left; animation: grow 1s cubic-bezier(.2,.8,.2,1) both; }
+.part b { font-family: var(--mono); font-weight: 500; text-align: right; }
+.part small { color: var(--muted); display: block; font-size: 11.5px; }
+
+/* ---------- discovery ---------- */
+.disc { background: var(--bg); }
+.streams { display: grid; grid-template-columns: 250px 120px 1fr; gap: 0; align-items: stretch; }
+.srcs { display: grid; gap: 10px; }
+.src { background: var(--card); border: 1px solid var(--rule); padding: 10px 12px; border-left: 4px solid var(--sky); }
+.src h3 { font-size: 15px; font-weight: 700; }
+.src p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.src.reddit { border-left-color: var(--coral); }
+.src.news { border-left-color: var(--leaf); }
+.src.fall { border-left-color: var(--muted); border-style: dashed; border-left-style: solid; }
+.pipes svg { width: 100%; height: 100%; display: block; }
+.pipes path { fill: none; stroke: var(--rule); stroke-width: 2; }
+.pipes circle { fill: var(--gold); }
+.flowdot { animation: flow 2.4s linear infinite; }
+@keyframes flow { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+.pipes .moving { stroke: var(--gold); stroke-width: 2.5; stroke-dasharray: 4 20; animation: flow 1.2s linear infinite; }
+.stages { display: grid; gap: 10px; align-content: center; }
+.stage { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; background: var(--card); padding: 11px 14px; border: 1px solid var(--rule); }
+.stage .num { width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 14px; }
+.stage h3 { font-size: 16px; font-weight: 700; }
+.stage p { font-size: 12.5px; color: var(--muted); }
+.out-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.out-tags span { font-family: var(--mono); font-size: 10.5px; padding: 2px 7px; background: var(--gold-soft); color: var(--ink); }
+
+/* ---------- ranking ---------- */
+.rank { background: var(--card); border-top: 6px solid var(--leaf); }
+.stack100 { display: flex; height: 64px; margin-top: 6px; }
+.stack100 div { padding: 8px 10px; color: #fff; display: flex; flex-direction: column; justify-content: space-between; animation: rise 0.6s ease-out both; overflow: hidden; }
+.stack100 div b { font-family: var(--display); font-weight: 800; font-size: 20px; line-height: 1; }
+.stack100 div span { font-size: 11.5px; font-weight: 600; white-space: nowrap; }
+.s1 { background: #1a1e3c; } .s2 { background: #3f63c9; } .s3 { background: #d9780f; } .s4 { background: #23855a; } .s5 { background: #8a5a9e; } .s6 { background: #6b7090; }
+.explain { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 16px; }
+.explain div { padding: 0 16px 0 0; font-size: 13px; color: var(--muted); }
+.explain div + div { border-left: 1px solid var(--rule); padding-left: 16px; }
+.explain b { color: var(--ink); display: block; font-size: 13.5px; }
+.stars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+.star { background: var(--bg); padding: 10px 12px; animation: pop 0.45s cubic-bezier(.3,1.6,.5,1) both; }
+.star .s { color: var(--gold); font-size: 16px; letter-spacing: 2px; }
+.star .s i { color: var(--rule); font-style: normal; }
+.star b { display: block; font-size: 14px; margin-top: 2px; }
+.star span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* ---------- compare ---------- */
+.cmp { background: var(--bg); }
+table.m { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.m th { text-align: left; font-family: var(--mono); font-weight: 400; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 8px 8px 0; border-bottom: 2px solid var(--ink); }
+table.m td { padding: 8px 8px 8px 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+table.m tr { animation: rise 0.5s ease-out both; }
+table.m td.n { font-weight: 700; }
+.ret { display: grid; grid-template-columns: 1fr 74px; gap: 8px; align-items: center; }
+.ret .t { position: relative; height: 10px; background: var(--card); border: 1px solid var(--rule); }
+.ret .t i { position: absolute; top: 0; bottom: 0; background: var(--leaf); transform-origin: left; animation: grow 0.8s ease-out both; }
+.ret span { font-family: var(--mono); font-size: 11.5px; }
+.risk { font-family: var(--mono); font-size: 11px; padding: 2px 8px; border: 1.5px solid currentColor; }
+.risk.lo { color: var(--leaf); } .risk.me { color: var(--gold); }
+.liq { display: inline-flex; gap: 3px; }
+.liq i { width: 9px; height: 9px; border-radius: 50%; background: var(--rule); }
+.liq i.on { background: var(--sky); }
+.cmp .note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+/* ---------- stack ---------- */
+.stk { background: var(--card); border-top: 6px solid var(--ink); }
+.cols { display: grid; grid-template-columns: 1fr 1.1fr; gap: 34px; }
+.tech { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.tech div { background: var(--bg); padding: 9px 12px; animation: pop 0.45s cubic-bezier(.3,1.6,.5,1) both; }
+.tech b { display: block; font-size: 14px; }
+.tech span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.next { list-style: none; padding: 0; margin: 10px 0 0; columns: 2; column-gap: 20px; }
+.next li { break-inside: avoid; font-size: 13.5px; padding: 6px 0 6px 18px; border-bottom: 1px solid var(--rule); position: relative; animation: rise 0.5s ease-out both; }
+.next li::before { content: ""; position: absolute; left: 0; top: 12px; width: 8px; height: 8px; border: 2px solid var(--gold); border-radius: 50%; }
+.warn { margin-top: 20px; display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center; border: 2px solid var(--coral); padding: 12px 16px; }
+.warn b { font-family: var(--display); font-weight: 800; color: var(--coral); font-size: 15px; }
+.warn span { font-size: 13px; }
+.by { margin-top: 12px; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+
+/* ---------- responsive ---------- */
+</style>
+
+<main class="sheet">
+
+<section class="hero" data-panel="01_hero" data-alt="Wealth Coach AI. Turn every paycheck into a personalized wealth plan. An AI powered personal finance coach for everyday Indians earning ₹20,000 to ₹5,00,000 a month: it reads your salary, expenses, age, goal and risk appetite, then recommends where to invest, why it fits, and how consistent investing compounds. It answers one question: given my income, where should I invest my money this month? Chart: with the app's default profile (₹50,000 salary, ₹30,000 expenses, medium risk) the planner suggests ₹16,000 a month; at the 12% a year the app assumes, that projects to about ₹36.8 lakh after 10 years (₹2.0L at year 1, ₹6.9L at year 3, ₹13.1L at year 5). A live demo runs on Streamlit Cloud.">
+  <div>
+    <div class="eyebrow">Wealth Coach AI · personal finance coach</div>
+    <h1>Every pay<em>check,</em> a plan.</h1>
+    <p class="claim">Tells first time investors where this month's money should go, and why.</p>
+    <p class="who">For everyday Indians earning <span class="rupee">₹</span>20,000 to <span class="rupee">₹</span>5,00,000 a month. Enter salary, expenses, age, goal and risk appetite; get a plan, ranked opportunities and a growth path.</p>
+    <p class="q">"Given my income, where should I invest my money this month?"</p>
+    <div class="link">live demo ▸ streamlit app (link below)</div>
+  </div>
+  <div class="graph">
+    <div class="gl"><span>SIP growth, default profile</span><span>12% a year, app assumption</span></div>
+    <svg viewBox="0 0 420 330" role="presentation">
+      <g class="grid" id="hgrid"></g>
+      <path class="area" id="harea" d=""/>
+      <path class="curve" id="hcurve" pathLength="100" d=""/>
+      <g id="hlabels"></g>
+      <text class="big" x="50" y="40"><tspan class="rupee">₹</tspan>36.8L</text>
+      <text x="50" y="58">after 10 years at <tspan class="rupee">₹</tspan>16,000 a month</text>
+      <g class="coin" style="animation-delay:0s"><circle cx="300" cy="30" r="10"/><text x="300" y="34" text-anchor="middle">₹</text></g>
+      <g class="coin" style="animation-delay:0.6s"><circle cx="330" cy="30" r="10"/><text x="330" y="34" text-anchor="middle">₹</text></g>
+      <g class="coin" style="animation-delay:1.2s"><circle cx="360" cy="30" r="10"/><text x="360" y="34" text-anchor="middle">₹</text></g>
+    </svg>
+    <p class="foot">Projection math from the app's wealth journey chart. Illustrative, not a promise of returns.</p>
+  </div>
+</section>
+
+<section class="plan" data-panel="02_planner" data-alt="The planner. Five inputs: monthly salary (₹20,000 to ₹5,00,000), monthly expenses, age, one of five goals (emergency fund, buy house, travel, retirement, wealth creation) and risk appetite (low, medium, high). Worked example with the app's defaults: salary ₹50,000 and expenses ₹30,000 leave ₹20,000 available, a 40% savings rate. Emergency fund target is 6 months of expenses, ₹1,80,000. Suggested monthly investment is 80% of what is available for medium risk (60% for low, 90% for high), so ₹16,000. Investment readiness score 73 out of 100: savings rate 40 of 40 (30% or more), emergency fund progress 3 of 30 (one month of savings against the target), investment capacity 30 of 30.">
+  <div class="top">
+    <div><div class="eyebrow">01 · the planner</div><h2>Where the salary goes</h2></div>
+    <p>Five inputs, a few plain rules. The worked example uses the app's own default profile.</p>
+  </div>
+  <div class="inputs">
+    <span class="rise d1">salary <b>₹50,000</b></span><span class="rise d2">expenses <b>₹30,000</b></span><span class="rise d3">age <b>25</b></span><span class="rise d4">goal <b>1 of 5</b></span><span class="rise d5">risk <b>medium</b></span>
+  </div>
+  <div class="split">
+    <div class="exp d1">Expenses ₹30,000</div>
+    <div class="inv d3">Invest ₹16,000</div>
+    <div class="kept d5">₹4k</div>
+  </div>
+  <div class="split-l"><span>60% of salary</span><span>80% of the ₹20,000 left over</span><span>kept</span></div>
+  <div class="outs">
+    <div class="out rise d2"><div class="v">₹20,000</div><div class="k">Available to invest</div><div class="f">salary minus expenses</div></div>
+    <div class="out rise d3"><div class="v">40%</div><div class="k">Savings rate</div><div class="f">available ÷ salary</div></div>
+    <div class="out rise d4"><div class="v">₹1,80,000</div><div class="k">Emergency fund target</div><div class="f">6 × monthly expenses</div></div>
+    <div class="out rise d5"><div class="v" style="color:var(--gold)">₹16,000</div><div class="k">Suggested each month</div><div class="f">60 / 80 / 90% by risk</div></div>
+  </div>
+  <div class="score">
+    <div class="ring">
+      <svg viewBox="0 0 130 130"><circle class="bgc" cx="65" cy="65" r="54"/><circle class="fg" cx="65" cy="65" r="54"/></svg>
+      <div class="n"><div>73<small>readiness / 100</small></div></div>
+    </div>
+    <div class="parts">
+      <div class="part"><span>Savings rate<small>30% or more earns the full 40</small></span><div class="t"><i class="d2" style="width:100%"></i></div><b>40/40</b></div>
+      <div class="part"><span>Emergency fund progress<small>one month's savings vs target</small></span><div class="t"><i class="d3" style="width:10%"></i></div><b>3/30</b></div>
+      <div class="part"><span>Investment capacity<small>investing 80% or more of surplus</small></span><div class="t"><i class="d4" style="width:100%"></i></div><b>30/30</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="disc" data-panel="03_discovery" data-alt="The discovery engine. Four kinds of source feed it. RSS feeds: RBI, SEBI, Economic Times Markets, Business Standard Markets and Mint Markets. NewsAPI for financial news. Reddit: r/IndiaInvestments, r/personalfinanceindia and r/IndianStreetBets. And a curated fallback of 22 demo articles used when live sources are unavailable. Stage 1, collect: up to 50 articles per source, 10 second timeouts, 3 retries, duplicates removed. Stage 2, clean: HTML stripped, content between 50 and 10,000 characters kept, sorted into categories such as investment, savings, retirement, tax, insurance, real estate, crypto and market trends. Stage 3, analyze: an LLM through OpenRouter (DeepSeek V3 by default) returns top opportunities, a market summary, policy updates, recommendations and risks. Stage 4, personalize: every opportunity is scored against your profile.">
+  <div class="top">
+    <div><div class="eyebrow">02 · discovery</div><h2>Market chatter in, ranked ideas out</h2></div>
+    <p>News feeds, regulators and investing communities are collected, cleaned and read by an LLM, then scored against your profile.</p>
+  </div>
+  <div class="streams">
+    <div class="srcs">
+      <div class="src rise d1"><h3>RSS feeds</h3><p>RBI, SEBI, Economic Times Markets, Business Standard Markets, Mint Markets</p></div>
+      <div class="src news rise d2"><h3>NewsAPI</h3><p>Financial news by topic (optional key)</p></div>
+      <div class="src reddit rise d3"><h3>Reddit</h3><p>r/IndiaInvestments, r/personalfinanceindia, r/IndianStreetBets</p></div>
+      <div class="src fall rise d4"><h3>Curated fallback</h3><p>22 demo articles when live sources are down</p></div>
+    </div>
+    <div class="pipes">
+      <svg viewBox="0 0 120 330" preserveAspectRatio="none" role="presentation">
+        <path d="M0 40 C 60 40, 60 165, 120 165"/><path d="M0 120 C 60 120, 60 165, 120 165"/><path d="M0 205 C 60 205, 60 165, 120 165"/><path d="M0 290 C 60 290, 60 165, 120 165"/>
+        <path class="moving" d="M0 40 C 60 40, 60 165, 120 165"/><path class="moving" d="M0 120 C 60 120, 60 165, 120 165" style="animation-delay:-0.3s"/><path class="moving" d="M0 205 C 60 205, 60 165, 120 165" style="animation-delay:-0.6s"/><path class="moving" d="M0 290 C 60 290, 60 165, 120 165" style="animation-delay:-0.9s"/>
+      </svg>
+    </div>
+    <div class="stages">
+      <div class="stage rise d2"><div class="num">1</div><div><h3>Collect</h3><p>Up to 50 articles per source, 10 s timeout, 3 retries, duplicates removed.</p></div></div>
+      <div class="stage rise d3"><div class="num">2</div><div><h3>Clean and classify</h3><p>HTML stripped, 50 to 10,000 characters kept, tagged as investment, savings, retirement, tax, insurance, real estate, crypto or market trends.</p></div></div>
+      <div class="stage rise d4"><div class="num">3</div><div><h3>Analyze with an LLM</h3><p>OpenRouter, DeepSeek V3 by default, returns structured JSON:</p><div class="out-tags"><span>top opportunities</span><span>market summary</span><span>policy updates</span><span>recommendations</span><span>risks</span></div></div></div>
+      <div class="stage rise d5"><div class="num">4</div><div><h3>Personalize</h3><p>Each opportunity is scored 0 to 100 against your profile (next panel).</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="rank" data-panel="04_ranking" data-alt="How an opportunity is ranked. A relevance score out of 100 is built from six parts: risk alignment up to 25 points, goal alignment up to 25, affordability up to 20, age suitability up to 15, savings rate fit up to 10, and the AI's own confidence up to 5. Risk alignment rewards an exact match of your risk appetite. Goal alignment matches keywords, for example retirement to PPF, NPS and pension, or wealth creation to index, equity, mutual fund and SIP. Age suitability favours growth under 30, balance under 40, stability under 55 and capital preservation after that. Scores map to stars: 80 and above is highly recommended (five stars), 60 and above a good fit (four), 40 and above a moderate fit (three), below 40 not recommended (one).">
+  <div class="top">
+    <div><div class="eyebrow">03 · personal ranking</div><h2>100 points of fit</h2></div>
+    <p>Every discovered opportunity is scored against the person, not the market. Six transparent parts add up to 100.</p>
+  </div>
+  <div class="stack100">
+    <div class="s1 d1" style="width:25%"><b>25</b><span>Risk alignment</span></div>
+    <div class="s2 d2" style="width:25%"><b>25</b><span>Goal alignment</span></div>
+    <div class="s3 d3" style="width:20%"><b>20</b><span>Affordability</span></div>
+    <div class="s4 d4" style="width:15%"><b>15</b><span>Age</span></div>
+    <div class="s5 d5" style="width:10%"><b>10</b><span>Saving</span></div>
+    <div class="s6 d6" style="width:5%"><b>5</b><span>AI</span></div>
+  </div>
+  <div class="explain">
+    <div class="rise d3"><b>Risk and goal</b>Exact risk match earns the full 25. Goals map to keywords: retirement to PPF, NPS and pension; wealth creation to index, equity, mutual funds and SIP.</div>
+    <div class="rise d4"><b>Age</b>Under 30 leans to growth, under 40 to balance, under 55 to stability, then to capital preservation.</div>
+    <div class="rise d5"><b>Saving and confidence</b>High savers can take more market risk; very low savers are steered to an emergency fund first. The AI's confidence adds up to 5.</div>
+  </div>
+  <div class="stars">
+    <div class="star d4"><div class="s">★★★★★</div><b>Highly recommended</b><span>80 and above</span></div>
+    <div class="star d5"><div class="s">★★★★<i>★</i></div><b>Good fit</b><span>60 to 79</span></div>
+    <div class="star d6"><div class="s">★★★<i>★★</i></div><b>Moderate fit</b><span>40 to 59</span></div>
+    <div class="star d7"><div class="s">★<i>★★★★</i></div><b>Not recommended</b><span>below 40</span></div>
+  </div>
+</section>
+
+<section class="cmp" data-panel="05_compare" data-alt="Side by side comparison of eight instruments, as stored in the app's comparison page. Index funds (Nifty 50): expected 10 to 14%, medium risk, high liquidity, no lock in. ELSS: 12 to 15%, medium risk, medium liquidity, 3 year lock in, 80C deduction up to ₹1.5 lakh. PPF: 7.1% guaranteed, low risk, low liquidity, 15 years. NPS: 9 to 12%, medium risk, very low liquidity, until age 60. Short term debt funds: 7 to 9%, low risk, high liquidity, no lock in. Gold ETF or SGB: 8 to 12% including interest, low risk, SGB locked 8 years. Emergency fund in a liquid fund: 4 to 6%, low risk, very high liquidity. Fixed deposits: 6 to 7.5%, low risk, medium liquidity, 1 to 5 years. The page also compares tax benefits, expense ratio and minimum investment.">
+  <div class="top">
+    <div><div class="eyebrow">04 · compare</div><h2>Eight instruments, one table</h2></div>
+    <p>The comparison page lines up returns, risk, liquidity, lock in, tax benefit, cost and minimum investment.</p>
+  </div>
+  <table class="m">
+    <tr><th style="width:200px">Instrument</th><th>Expected return (app data)</th><th style="width:90px">Risk</th><th style="width:96px">Liquidity</th><th style="width:150px">Lock in</th></tr>
+    <tr class="d1"><td class="n">Index funds (Nifty 50)</td><td><div class="ret"><div class="t"><i class="d1" style="left:66.7%;width:26.7%"></i></div><span>10 to 14%</span></div></td><td><span class="risk me">Medium</span></td><td><span class="liq"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>None</td></tr>
+    <tr class="d2"><td class="n">ELSS tax saver</td><td><div class="ret"><div class="t"><i class="d2" style="left:80%;width:20%"></i></div><span>12 to 15%</span></div></td><td><span class="risk me">Medium</span></td><td><span class="liq"><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>3 years</td></tr>
+    <tr class="d3"><td class="n">PPF</td><td><div class="ret"><div class="t"><i class="d3" style="left:46.7%;width:1.5%"></i></div><span>7.1% fixed</span></div></td><td><span class="risk lo">Low</span></td><td><span class="liq"><i class="on"></i><i></i><i></i><i></i></span></td><td>15 years</td></tr>
+    <tr class="d4"><td class="n">NPS</td><td><div class="ret"><div class="t"><i class="d4" style="left:60%;width:20%"></i></div><span>9 to 12%</span></div></td><td><span class="risk me">Medium</span></td><td><span class="liq"><i></i><i></i><i></i><i></i></span></td><td>Until age 60</td></tr>
+    <tr class="d5"><td class="n">Debt funds (short term)</td><td><div class="ret"><div class="t"><i class="d5" style="left:46.7%;width:13.3%"></i></div><span>7 to 9%</span></div></td><td><span class="risk lo">Low</span></td><td><span class="liq"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></td><td>None</td></tr>
+    <tr class="d6"><td class="n">Gold ETF or SGB</td><td><div class="ret"><div class="t"><i class="d6" style="left:53.3%;width:26.7%"></i></div><span>8 to 12%</span></div></td><td><span class="risk lo">Low</span></td><td><span class="liq"><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>SGB 8 years</td></tr>
+    <tr class="d7"><td class="n">Emergency fund (liquid)</td><td><div class="ret"><div class="t"><i class="d7" style="left:26.7%;width:13.3%"></i></div><span>4 to 6%</span></div></td><td><span class="risk lo">Low</span></td><td><span class="liq"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></td><td>None</td></tr>
+    <tr class="d8"><td class="n">Fixed deposits</td><td><div class="ret"><div class="t"><i class="d8" style="left:40%;width:10%"></i></div><span>6 to 7.5%</span></div></td><td><span class="risk lo">Low</span></td><td><span class="liq"><i class="on"></i><i class="on"></i><i></i><i></i></span></td><td>1 to 5 years</td></tr>
+  </table>
+  <p class="note">Return bars span 0 to 15% a year. Figures are the reference values stored in the app, not live market data or guarantees.</p>
+</section>
+
+<section class="stk" data-panel="06_stack" data-alt="Stack and what is next. Built with Streamlit for the interface, Python, OpenRouter with DeepSeek V3 for AI, Plotly charts, Pandas and NumPy for data processing, SQLite through SQLAlchemy for storage, and feedparser plus requests for RSS, NewsAPI and Reddit collection. Planned next: live NSE and BSE market integration, real time mutual fund NAV tracking, portfolio rebalancing suggestions, goal based financial planning, AI powered SIP optimization, a tax planning assistant, brokerage integrations, stock and ETF screening, financial document parsing, and a mobile application. Disclaimer: an educational and portfolio project; recommendations generated by the application are not professional investment advice. Built by Aditya K. Koundinya.">
+  <div class="top">
+    <div><div class="eyebrow">05 · stack and roadmap</div><h2>Built on, and building toward</h2></div>
+    <p>Most finance apps track spending. This one is about growing what is left.</p>
+  </div>
+  <div class="cols">
+    <div>
+      <div class="eyebrow" style="color:var(--muted)">Stack</div>
+      <div class="tech">
+        <div class="d1"><b>Streamlit</b><span>interface, multipage app</span></div>
+        <div class="d2"><b>OpenRouter</b><span>DeepSeek V3 by default</span></div>
+        <div class="d3"><b>Plotly</b><span>allocation and growth charts</span></div>
+        <div class="d4"><b>Pandas, NumPy</b><span>data processing</span></div>
+        <div class="d5"><b>SQLite</b><span>profiles and plans via SQLAlchemy</span></div>
+        <div class="d6"><b>feedparser, requests</b><span>RSS, NewsAPI, Reddit</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow" style="color:var(--muted)">Roadmap</div>
+      <ul class="next">
+        <li class="d1">Live NSE and BSE data</li>
+        <li class="d1">Real time fund NAV tracking</li>
+        <li class="d2">Rebalancing suggestions</li>
+        <li class="d2">Goal based planning</li>
+        <li class="d3">AI powered SIP optimization</li>
+        <li class="d3">Tax planning assistant</li>
+        <li class="d4">Brokerage integrations</li>
+        <li class="d4">Stock and ETF screening</li>
+        <li class="d5">Financial document parsing</li>
+        <li class="d5">Mobile application</li>
+      </ul>
+    </div>
+  </div>
+  <div class="warn rise d6"><b>Not advice</b><span>An educational and portfolio project. Recommendations generated by the application are not professional investment advice.</span></div>
+  <div class="by">Built by Aditya K. Koundinya · github.com/Koundinya2003</div>
+</section>
+
+</main>
+
+<script>
+(function () {
+  var ns = "http://www.w3.org/2000/svg";
+  // SIP of 16,000 a month at 1% a month, the app's own projection formula
+  var pts = [[0, 0]], c = 0;
+  for (var y = 1; y <= 10; y++) { for (var m = 0; m < 12; m++) c = c * 1.01 + 16000; pts.push([y, c]); }
+  var X = function (y) { return 40 + y * 36; }, Y = function (v) { return 300 - v / 4000000 * 200; };
+  var d = pts.map(function (p, i) { return (i ? "L" : "M") + X(p[0]).toFixed(1) + " " + Y(p[1]).toFixed(1); }).join(" ");
+  document.getElementById("hcurve").setAttribute("d", d);
+  document.getElementById("harea").setAttribute("d", d + " L " + X(10) + " 300 L " + X(0) + " 300 Z");
+  var g = document.getElementById("hgrid"), lab = document.getElementById("hlabels");
+  [0, 1000000, 2000000, 3000000, 4000000].forEach(function (v) {
+    var l = document.createElementNS(ns, "line"); l.setAttribute("x1", 40); l.setAttribute("x2", 400); l.setAttribute("y1", Y(v)); l.setAttribute("y2", Y(v)); g.appendChild(l);
+    var t = document.createElementNS(ns, "text"); t.setAttribute("x", 34); t.setAttribute("y", Y(v) + 4); t.setAttribute("text-anchor", "end"); t.textContent = (v / 100000) + "L"; lab.appendChild(t);
+  });
+  [0, 2, 4, 6, 8, 10].forEach(function (yv) {
+    var t = document.createElementNS(ns, "text"); t.setAttribute("x", X(yv)); t.setAttribute("y", 318); t.setAttribute("text-anchor", "middle"); t.textContent = "yr " + yv; lab.appendChild(t);
+  });
+})();
+</script>
